@@ -1,29 +1,36 @@
-# Use an official Go base image, selecting for Alpine for its smaller size.
-FROM golang:1.20-alpine AS builder
+# Builder stage
+FROM alpine:latest AS builder
 
-# Set the working directory within the container.
+# Install Go (replace 1.22 with the version in your go.mod)
+RUN apk add --no-cache go
+
+# Set the working directory
 WORKDIR /app
 
-# Copy go.mod and go.sum to ensure dependencies are cached correctly.
+# Copy go.mod and go.sum for dependency caching
 COPY go.mod go.sum ./
 
-# Download dependencies.
+# Download dependencies using Go Modules
 RUN go mod download
 
-# Copy the entire project into the container.
+# Copy the entire project
 COPY . .
 
-# Build the Go binary statically for better portability.
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
+# Build the Go binary (replace "url_shortener" with your project's main package name)
+RUN go build -o /url_shortener
 
-# Use a minimal base image for the final image. This minimizes the size of the container.
+# Final stage
 FROM alpine:latest
 
-# Set the working directory for the run time container
+# Set the working directory
 WORKDIR /app
 
-# Copy the binary from the builder stage to the final image.
-COPY --from=builder /app/main .
+# Copy only the necessary binary from the builder stage
+COPY --from=builder /url_shortener .
 
-# Define the command to run when the container starts.
-CMD ["./main"]
+# Expose the port your application listens on (if applicable)
+EXPOSE 3000
+
+# Command to run the application
+CMD ["./url_shortener"]
+
