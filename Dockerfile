@@ -7,9 +7,8 @@ WORKDIR /app
 # Copy go.mod and go.sum to ensure dependencies are cached correctly.
 COPY go.mod go.sum ./
 
-# Download dependencies. The --build-vcs=false is a workaround for cases where Git isn't present
-# on the container
-RUN go mod download --build-vcs=false
+# Download dependencies.
+RUN go mod download
 
 # Copy the entire project into the container.
 COPY . .
