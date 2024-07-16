@@ -30,8 +30,9 @@ func main() {
 		}
 
 		url = adjustHTTPS(url)
+		url = removeAllTrailingSlash(url)
 
-		if !isURLValid(url) {
+		if !isValidURL(url) {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "url is not valid"})
 		}
 
