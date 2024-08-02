@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"log"
 )
 
@@ -13,6 +14,10 @@ func main() {
 		AllowOrigins: "*",                               // Allow requests from any origin
 		AllowMethods: "GET, POST, PUT, DELETE, OPTIONS", // Allowed HTTP methods
 		AllowHeaders: "Origin, Content-Type, Accept",    // Allowed headers
+	}))
+
+	app.Use(logger.New(logger.Config{
+		Format: "[${time}] ${status} - ${latency} ${method} ${path} ${ip} \n",
 	}))
 
 	urlShortener := NewUrlShortener()
@@ -49,5 +54,9 @@ func main() {
 		return c.Redirect(redirectUrl, fiber.StatusPermanentRedirect)
 	})
 
-	log.Fatal(app.Listen(":3000"))
+	//log.Fatal(app.Listen(":3000"))
+	//Listen on HTTPS with self-signed certificate
+	if err := app.ListenTLS(":443", "./localhost+2.pem", "./localhost+2-key.pem"); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

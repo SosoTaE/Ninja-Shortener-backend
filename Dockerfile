@@ -22,6 +22,18 @@ RUN go build -o /url_shortener
 # Final stage
 FROM alpine:latest
 
+# Install dependencies for mkcert (including openssl and ca-certificates)
+RUN apk add --no-cache bash openssl ca-certificates
+
+# Install mkcert
+RUN wget -qO /tmp/mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64 && \
+    chmod +x /tmp/mkcert && \
+    mv /tmp/mkcert /usr/local/bin/mkcert
+
+# Generate the certificate and key
+RUN mkcert -install && \
+    mkcert localhost 127.0.0.1 ::3000
+
 # Set the working directory
 WORKDIR /app
 
@@ -29,8 +41,7 @@ WORKDIR /app
 COPY --from=builder /url_shortener .
 
 # Expose the port your application listens on (if applicable)
-EXPOSE 3000
+EXPOSE 443  # Change to 443 for HTTPS
 
-# Command to run the application
+# Command to run the application (using HTTPS)
 CMD ["./url_shortener"]
-
