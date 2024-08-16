@@ -3,11 +3,21 @@ package main
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
 )
 
 func main() {
 	app := fiber.New()
+
+	corsConfig := cors.Config{
+		AllowOrigins:     "https://sulkhans.github.io", // Replace with your actual frontend domain
+		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
+		AllowHeaders:     "Origin, Content-Type, Accept",
+		AllowCredentials: true, // If you truly need credentials, keep this true
+	}
+
+	app.Use(cors.New(corsConfig))
 
 	urlShortener := NewUrlShortener()
 
