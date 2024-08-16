@@ -5,13 +5,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
+	"os"
 )
 
 func main() {
 	app := fiber.New()
 
+	allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
+	if allowedOrigin == "" {
+		panic("ALLOWED_ORIGIN environment variable is not set")
+	}
+
 	corsConfig := cors.Config{
-		AllowOrigins:     "https://sulkhans.github.io", // Replace with your actual frontend domain
+		AllowOrigins:     allowedOrigin, // Replace with your actual frontend domain
 		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
 		AllowHeaders:     "Origin, Content-Type, Accept",
 		AllowCredentials: true, // If you truly need credentials, keep this true
