@@ -1,20 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
-	"os"
 )
 
 func main() {
 	app := fiber.New()
 
-	allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
-	if allowedOrigin == "" {
-		panic("ALLOWED_ORIGIN environment variable is not set")
-	}
+	allowedOrigin := "https://sulkhans.github.io"
+	//allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
+	//if allowedOrigin == "" {
+	//	panic("ALLOWED_ORIGIN environment variable is not set")
+	//}
 
 	corsConfig := cors.Config{
 		AllowOrigins:     allowedOrigin, // Replace with your actual frontend domain
@@ -40,7 +39,6 @@ func main() {
 		}
 
 		url = adjustHTTPS(url)
-		fmt.Println(url)
 
 		if !isURLValid(url) {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "url is not valid"})
