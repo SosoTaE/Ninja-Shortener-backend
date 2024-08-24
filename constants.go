@@ -1,7 +1,9 @@
 package main
 
-const STRINGS string = "abcdefghijk"
+import (
+	"os"
+	"strconv"
+)
 
-// const MIN_NUMBER = 10000
-// const MAX_NUMBER = 99999
-const SIZE = 5
+var STRINGS = os.Getenv("STRINGS")
+var SIZE, _ = strconv.Atoi(os.Getenv("SIZE"))

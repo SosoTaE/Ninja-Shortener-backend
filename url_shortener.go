@@ -20,8 +20,8 @@ type UrlShortener struct {
 }
 
 func NewUrlShortener() *UrlShortener {
-	minNumber := math.Pow(10, SIZE)
-	maxNumber := math.Pow(10, SIZE+1)
+	minNumber := math.Pow(10, float64(SIZE))
+	maxNumber := math.Pow(10, float64(SIZE+1))
 	randomNumber := random(int(minNumber), int(maxNumber))
 	return &UrlShortener{counter: 0, number: randomNumber, data: make(map[string]Data), urlMap: make(map[string]string)}
 }

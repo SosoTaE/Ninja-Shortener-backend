@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"net/url"
 	"strings"
@@ -20,13 +21,29 @@ func random(min, max int) int {
 //}
 
 func isURLValid(toTest string) bool {
-	_, err := url.ParseRequestURI(toTest)
-	if err != nil {
+	//_, err := url.ParseRequestURI(toTest)
+	//if err != nil {
+	//	return false
+	//}
+
+	u, err := url.Parse(toTest)
+	fmt.Println(u)
+	if err != nil || u.Host == "" {
 		return false
 	}
 
-	u, err := url.Parse(toTest)
-	if err != nil || u.Scheme == "" || u.Host == "" {
+	lastDotIndex := strings.LastIndex(toTest, ".")
+	if lastDotIndex == -1 {
+		return false
+	}
+
+	numDots := strings.Count(toTest, ".")
+
+	if numDots < 2 {
+		return false
+	}
+
+	if numDots == 2 && lastDotIndex == len(toTest)-1 {
 		return false
 	}
 
